@@ -1,0 +1,71 @@
+.\" Manpage for CES.
+.TH ces 1 "Feb 2017" "0.1" "ces man page"
+.SH NAME
+ces - reportes comparativos dos instancias Oracle
+.SH SYNOPSYS
+.B
+.TP
+ces [PARAMETRO [VALOR]] [PARAMETRO [VALOR]] ...
+.SH DESCRIPTION
+Se conecta a dos BD Oracle y genera reporte comparativo. Las comparaciones se hacen en un solo sentido, asumiendo que queremos modificar la instancia prioritaria para homologarla con la otra. Por defecto la instancia prioritaria es la indicada por la opción --bd1, a menos que se indique lo contrario con la opción --prioridad.  No sirve para comparar DDLs de objetos.
+
+La aplicación pide los passwords para BD1 y BD2 a menos que se seteen las variables de entorno PASSWDBD1 y PASSWDBD2 respectivamente.
+.SH PARAMETROS REQUERIDOS
+.TP
+.B \--bd1
+Requerido. Cadena de conección a la base de datos 1 con el siguiente formato: USUARIO@IP:PUERTO/INSTANCIA . Ésta es la "instancia prioritaria" por defecto, es decir, aquella a la cual nos queremos paracer. Para cambiar la instancia prioritaria, ver opción --prioridad.  Se recomienda el uso de SYSTEM o SYS para mejor resultado.
+.TP
+.B \--bd2
+Requerido. Cadena de conección a la base de datos 2 con el siguiente formato: USUARIO@IP:PUERTO/INSTANCIA . Se recomienda el uso de SYSTEM o SYS para mejor resultado.
+.SH PARAMETROS IMPORTANTES
+.TP
+.B \--prioridad
+Indica cuál es la instancia prioritaria, es decir la que se toma como base para las comparaciones, asumiendo que queremos modificar la otra instancia para que se parezca a ésta. Los valores son 1 para BD1 (por defecto) o 2 para BD2. Cualquier valor fuera de rango provoca que se use el valor por defecto.
+.TP
+.B \--esquemas
+Indica los esquemas que se desean comparar. Se debe indicar una lista separada por comas, con los nombres de esquemas en mayúsculas y sin espacios. Si no se indica esta opción, los comparadores funcionaránn en TODA la BD. ADVERTENCIA: El comparador de permisos hace caso omiso a esta opción.
+.TP
+.B \--aliases
+Aliases para BD1 y BD2 para que aparezcan en los reportes. Formato: ALIAS1,ALIAS2 (sin espacios)
+.SH COMPARADORES
+.TP
+.B \--cantidad_objetos
+Comparar cantidad de objetos entre ambas instancias.
+.TP
+.B \--objetos_faltantes
+Reportar objetos que están en la instancia prioritaria pero no en la otra.
+.TP
+.B \--objetos_validos
+Reportar objetos que existen en ambas instancias pero tienen diferente estado VALID/INVALID (compilado/descompilado. Aplica a procedimientos almacenados, vistas y otros objetos compilables).
+.TP
+.B \--objetos_activos
+Reportar objetos que existen en ambas instancias pero tienen diferente estado ENABLED/DISABLED (aplica a objetos que se pueden habilitar y deshabilitar, como por ejemplo constraints).
+.TP
+.B \--usuarios_faltantes
+Reportar usuarios o roles que existen en la instancia prioritaria pero no en la otra.
+.TP
+.B \--cantidad_filas
+Comparar la cantidad de filas de las tablas de las dos instancias.
+.TP
+.B \--permisos
+Reporta las diferencias de permisología de usuarios y roles que existan en ambas instancias. Incluye roles otorgados, privilegios de sistema y privilegios sonbre objetos. Este comparador puede tardar en ejecutarse, dependiendo de la cantidad de esquemas, usuarios, roles y objetos. ADVERTENCIA: este comparador siempre compara TODOS los usuarios y roles que existan en ambas BDs, es decir no está limitado por la opción --esquemas.
+.TP
+.B \--todos
+Realizar todas las comparaciones. Si no se indica ningún comparador, se asume esta opción por defecto.
+.SH OTROS PARAMETROS
+.TP
+.B \--ruta_salida
+Por defecto, adicionalmente a la salida por stdout, el utilitario genera un reporte en un archivo plano ubicado en la carpeta actual (la que devuelve el comando pwd) y con un sufijo de YYMMDDMMHHSS. Con este parámetro se puede indicar otra ruta y nombre para el archivo de salida.
+.TP
+.B \--debugparms
+No ejecuta la comparación, sólo muestra los parámetros escogidos.
+.TP
+.B \--version
+Muestra la versión actual de CES.
+.TP
+.B \--ayuda
+Muestra esta ayuda.
+.SH AUTHOR
+Tulains Córdova - cordovat@gmail.com
+
+

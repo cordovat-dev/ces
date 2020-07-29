@@ -1,0 +1,21 @@
+_ces() 
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts="--bd1 --bd2 --aliases --prioridad --cantidad_objetos --objetos_faltantes --objetos_validos --objetos_activos --usuarios_faltantes --cantidad_filas --permisos --todos --version --ayuda --debugparms --esquemas --ruta_salida"
+
+    if [[ ${cur} == -* ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        return 0
+    fi
+
+    #opts="ls *"
+    #if [[ ${prev} == --parfile ]]; then	
+    #    ( $(compgen -f ${cur}) )
+    #    return 0
+    #fi
+}
+complete -F _ces -o default ces
+
